@@ -1,7 +1,7 @@
 Summary:	Transmission Remote GUI
 Name:		transgui
 Version:	5.18.0
-Release:	1
+Release:	2
 License:	GPL v2
 Group:		Applications/Communications
 Source0:	https://github.com/transmission-remote-gui/transgui/archive/v%{version}/%{name}-%{version}.tar.gz
@@ -10,6 +10,7 @@ URL:		https://github.com/transmission-remote-gui/transgui/
 BuildRequires:	lazarus
 BuildRequires:	gtk+2-devel
 BuildRequires:	pango-devel
+BuildRequires:	sed
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %description
@@ -27,10 +28,12 @@ lazbuild -B "transgui.lpi" --lazarusdir=%{_libdir}/lazarus/
 
 %install
 rm -rf $RPM_BUILD_ROOT
-install -d $RPM_BUILD_ROOT{%{_bindir},%{_datadir}/%{name}}
+install -d $RPM_BUILD_ROOT{%{_bindir},%{_desktopdir},%{_pixmapsdir},%{_datadir}/%{name}}
 
 cp -a transgui $RPM_BUILD_ROOT%{_bindir}
 cp -a lang $RPM_BUILD_ROOT%{_datadir}/%{name}
+%{__sed} -e 's|@bindir@|%{_bindir}|' snap/local/transgui.desktop >$RPM_BUILD_ROOT%{_desktopdir}/transgui.desktop
+cp -a transgui.png $RPM_BUILD_ROOT%{_pixmapsdir}
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -40,3 +43,5 @@ rm -rf $RPM_BUILD_ROOT
 %doc README.md
 %attr(755,root,root) %{_bindir}/%{name}*
 %{_datadir}/%{name}
+%{_desktopdir}/transgui.desktop
+%{_pixmapsdir}/transgui.png
